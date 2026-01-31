@@ -1,0 +1,67 @@
+<div>
+  <div class="board-header">
+    <div>
+      <h1 class="board-title">Board</h1>
+      <p class="board-subtitle">{{ tickets().length }} tickets</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <app-loader />
+  } @else {
+    <div class="board-columns">
+      @for (status of columns; track status) {
+        <div class="board-column">
+          <div class="column-header">
+            <div class="column-header-left">
+              <span class="column-dot" [style.background-color]="statusColor(status)"></span>
+              <h3 class="column-title">{{ statusLabel(status) }}</h3>
+              <span class="column-count">{{ getColumn(status).length }}</span>
+            </div>
+          </div>
+
+          <div class="column-body"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event, status)"
+            [class.drag-over]="dragOverStatus === status"
+            (dragenter)="dragOverStatus = status"
+            (dragleave)="onDragLeave($event, status)">
+
+            @for (ticket of getColumn(status); track ticket.id) {
+              <a [routerLink]="['/tickets', ticket.id]"
+                class="board-card"
+                draggable="true"
+                (dragstart)="onDragStart($event, ticket)">
+                <div class="card-top">
+                  <span class="card-id">{{ ticket.ticketNumber }}</span>
+                  <span class="card-priority"
+                    [style.color]="priorityColor(ticket.priority)"
+                    [style.border-color]="priorityColor(ticket.priority) + '40'">
+                    {{ priorityLabel(ticket.priority) }}
+                  </span>
+                </div>
+                <p class="card-title">{{ ticket.title }}</p>
+                <div class="card-bottom">
+                  <span class="card-type">{{ typeLabel(ticket.type) }}</span>
+                  @if (ticket.assignee) {
+                    <span class="card-avatar">
+                      {{ ticket.assignee.firstName.charAt(0) }}{{ ticket.assignee.lastName.charAt(0) }}
+                    </span>
+                  } @else {
+                    <span class="card-unassigned">--</span>
+                  }
+                </div>
+              </a>
+            }
+
+            @if (getColumn(status).length === 0) {
+              <div class="column-empty">
+                Drop tickets here
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

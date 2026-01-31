@@ -1,0 +1,13 @@
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+textarea::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+:host-context(.dark) textarea::-webkit-scrollbar-thumb {
+  background: #334155;
+}

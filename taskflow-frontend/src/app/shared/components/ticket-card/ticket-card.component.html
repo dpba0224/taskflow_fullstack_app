@@ -1,0 +1,56 @@
+<a [routerLink]="['/tickets', ticket().id]" class="ticket-card">
+  <!-- Top row: ticket number + priority -->
+  <div class="card-top-row">
+    <span class="ticket-number">{{ ticket().ticketNumber }}</span>
+    <span class="priority-badge"
+      [style.color]="priorityColor()"
+      [style.border-color]="priorityColor() + '33'"
+      [style.background-color]="priorityColor() + '0D'">
+      {{ priorityLabel() }}
+    </span>
+  </div>
+
+  <!-- Title -->
+  <h3 class="ticket-title">{{ ticket().title }}</h3>
+
+  <!-- Tags row -->
+  <div class="tags-row">
+    <span class="tag tag-type" [style.color]="typeColor()" [style.border-color]="typeColor() + '33'" [style.background-color]="typeColor() + '0D'">
+      {{ typeLabel() }}
+    </span>
+    <span class="tag tag-status" [style.color]="statusColor()" [style.border-color]="statusColor() + '33'" [style.background-color]="statusColor() + '0D'">
+      {{ statusLabel() }}
+    </span>
+    @for (tag of ticket().tags.slice(0, 2); track tag) {
+      <span class="tag tag-custom">{{ tag }}</span>
+    }
+  </div>
+
+  <!-- Footer: assignee + meta -->
+  <div class="card-footer">
+    <div class="assignee-section">
+      @if (ticket().assignee) {
+        <span class="assignee-avatar">
+          {{ ticket().assignee!.firstName.charAt(0) }}{{ ticket().assignee!.lastName.charAt(0) }}
+        </span>
+        <span class="assignee-name">{{ ticket().assignee!.firstName }} {{ ticket().assignee!.lastName }}</span>
+      } @else {
+        <span class="unassigned">Unassigned</span>
+      }
+    </div>
+    <div class="meta-section">
+      @if (ticket().dueDate) {
+        <span class="meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          {{ ticket().dueDate | dateFormat:'short' }}
+        </span>
+      }
+      @if (ticket().commentCount) {
+        <span class="meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          {{ ticket().commentCount }}
+        </span>
+      }
+    </div>
+  </div>
+</a>

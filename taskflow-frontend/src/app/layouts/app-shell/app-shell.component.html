@@ -1,0 +1,20 @@
+<div class="shell" style="background-color: var(--bg)">
+  <app-header
+    (toggleSidebar)="toggleSidebar()"
+    (createTicket)="showCreateModal.set(true)" />
+  <div class="shell-body">
+    @if (sidebarOpen() && isMobile()) {
+      <div class="mobile-overlay" (click)="sidebarOpen.set(false)"></div>
+    }
+    <app-sidebar [open]="sidebarOpen()" [mobile]="isMobile()" />
+    <main class="shell-main">
+      <div class="shell-content">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>
+
+@if (showCreateModal()) {
+  <app-ticket-create (close)="showCreateModal.set(false)" />
+}

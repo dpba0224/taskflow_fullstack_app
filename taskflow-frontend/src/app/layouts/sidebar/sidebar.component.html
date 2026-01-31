@@ -1,0 +1,25 @@
+@if (open()) {
+  <aside class="sidebar"
+    [class.sidebar-mobile]="mobile()">
+    <div class="sidebar-brand">
+      <span class="brand-icon">T</span>
+      <span class="brand-text">TaskFlow</span>
+    </div>
+    <div class="sidebar-section-label">Navigation</div>
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.path) {
+        <a [routerLink]="item.path" routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+          class="nav-item">
+          <span class="nav-icon" [innerHTML]="item.icon"></span>
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+    <div class="sidebar-footer">
+      <p>
+        Press <kbd class="shortcut-key">?</kbd> for shortcuts
+      </p>
+    </div>
+  </aside>
+}

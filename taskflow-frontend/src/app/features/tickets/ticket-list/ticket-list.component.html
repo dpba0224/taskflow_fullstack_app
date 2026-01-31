@@ -1,0 +1,68 @@
+<div>
+  <!-- Header -->
+  <div class="list-header">
+    <div>
+      <h1 class="list-title">All Tickets</h1>
+      <p class="list-subtitle">{{ total() }} tickets total</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <select [(ngModel)]="statusFilter" (ngModelChange)="loadTickets()" class="filter-select">
+      <option value="">All Statuses</option>
+      @for (s of statuses; track s) {
+        <option [value]="s">{{ statusLabel(s) }}</option>
+      }
+    </select>
+    <select [(ngModel)]="typeFilter" (ngModelChange)="loadTickets()" class="filter-select">
+      <option value="">All Types</option>
+      @for (t of types; track t) {
+        <option [value]="t">{{ typeLabel(t) }}</option>
+      }
+    </select>
+    <select [(ngModel)]="priorityFilter" (ngModelChange)="loadTickets()" class="filter-select">
+      <option value="">All Priorities</option>
+      @for (p of priorities; track p) {
+        <option [value]="p">{{ priorityLabel(p) }}</option>
+      }
+    </select>
+    @if (statusFilter || typeFilter || priorityFilter) {
+      <button (click)="clearFilters()" class="clear-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        Clear
+      </button>
+    }
+  </div>
+
+  <!-- Ticket list -->
+  @if (loading()) {
+    <app-loader />
+  } @else if (tickets().length === 0) {
+    <div class="empty-state">
+      <svg class="empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+      <p class="empty-title">No tickets found</p>
+      <p class="empty-desc">Create a new ticket to get started</p>
+    </div>
+  } @else {
+    <div class="ticket-grid">
+      @for (ticket of tickets(); track ticket.id) {
+        <app-ticket-card [ticket]="ticket" />
+      }
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button (click)="goToPage(page() - 1)" [disabled]="page() === 0" class="page-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="page-info">
+          Page {{ page() + 1 }} of {{ totalPages() }}
+        </span>
+        <button (click)="goToPage(page() + 1)" [disabled]="page() + 1 >= totalPages()" class="page-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    }
+  }
+</div>

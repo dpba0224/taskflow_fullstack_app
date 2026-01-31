@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(java:*)",
+      "Bash(mvn:*)",
+      "Bash(curl:*)",
+      "Bash(chmod:*)",
+      "Bash(./gradlew compileJava:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(node:*)",
+      "Bash(ng version:*)",
+      "Bash(ng new:*)",
+      "Bash(npm install:*)",
+      "Bash(npx ng build)",
+      "Bash(find:*)",
+      "WebFetch(domain:shadcnuikit.com)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "mcp__ide__getDiagnostics"
+    ]
+  }
+}

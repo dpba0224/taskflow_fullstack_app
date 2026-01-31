@@ -1,0 +1,30 @@
+.shell {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.shell-main {
+  flex: 1;
+  overflow: auto;
+  padding: 1.5rem;
+}
+
+.shell-content {
+  max-width: 64rem;
+  margin: 0 auto;
+}

@@ -1,0 +1,70 @@
+<div>
+  <h3 class="section-title">
+    Comments ({{ comments().length }})
+  </h3>
+
+  <div class="comments-list">
+    @for (comment of comments(); track comment.id) {
+      <div class="comment-item">
+        <div class="comment-header">
+          <div class="comment-author">
+            <span class="author-avatar">
+              {{ comment.user?.firstName?.charAt(0) }}{{ comment.user?.lastName?.charAt(0) }}
+            </span>
+            <div>
+              <span class="author-name">
+                {{ comment.user?.firstName }} {{ comment.user?.lastName }}
+              </span>
+              <span class="comment-time">
+                {{ comment.createdAt | dateFormat }}
+              </span>
+              @if (comment.edited) {
+                <span class="comment-edited">(edited)</span>
+              }
+            </div>
+          </div>
+          @if (comment.user?.id === currentUserId()) {
+            <div class="comment-actions">
+              <button (click)="startEdit(comment)" class="action-btn">Edit</button>
+              <button (click)="deleteComment(comment.id)" class="action-btn action-btn-danger">Delete</button>
+            </div>
+          }
+        </div>
+        @if (editingId() === comment.id) {
+          <div class="edit-area">
+            <textarea [(ngModel)]="editContent" rows="2" class="textarea"></textarea>
+            <div class="edit-actions">
+              <button (click)="saveEdit(comment.id)" class="btn btn-primary btn-sm">Save</button>
+              <button (click)="editingId.set(null)" class="btn btn-outline btn-sm">Cancel</button>
+            </div>
+          </div>
+        } @else {
+          <div class="prose prose-sm max-w-none comment-body"
+            [innerHTML]="comment.content | markdown"></div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (comments().length === 0) {
+    <div class="empty-comments">
+      No comments yet. Be the first to comment.
+    </div>
+  }
+
+  <!-- Add comment -->
+  <div class="new-comment">
+    <span class="author-avatar new-comment-avatar">
+      {{ currentUserInitials() }}
+    </span>
+    <div class="new-comment-form">
+      <textarea [(ngModel)]="newContent" rows="2" placeholder="Write a comment... (Markdown supported)"
+        class="textarea"></textarea>
+      <div class="new-comment-submit">
+        <button (click)="addComment()" [disabled]="!newContent.trim()" class="btn btn-primary btn-sm">
+          Comment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

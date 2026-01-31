@@ -1,0 +1,48 @@
+<div>
+  <!-- Drop zone -->
+  <div class="drop-zone"
+    [class.drop-zone-active]="dragging()"
+    (click)="fileInput.click()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="dragging.set(false)"
+    (drop)="onDrop($event)">
+    <svg class="drop-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+    <p class="drop-text">Drag & drop files here, or click to browse</p>
+    <p class="drop-hint">Max 10 MB per file</p>
+  </div>
+  <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" multiple>
+
+  <!-- Uploading -->
+  @if (uploading()) {
+    <div class="upload-status">
+      <span class="spinner"></span>
+      Uploading...
+    </div>
+  }
+
+  <!-- Uploaded files -->
+  @if (files().length) {
+    <div class="file-list">
+      @for (file of files(); track file.id) {
+        <div class="file-item">
+          <div class="file-info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            <span class="file-name">{{ file.originalName }}</span>
+            <span class="file-size">{{ formatSize(file.size) }}</span>
+          </div>
+          <div class="file-actions">
+            <a [href]="file.url" target="_blank" class="action-btn">View</a>
+            <button (click)="removeFile(file.id)" class="action-btn action-btn-danger">Remove</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (error()) {
+    <div class="upload-error">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      {{ error() }}
+    </div>
+  }
+</div>

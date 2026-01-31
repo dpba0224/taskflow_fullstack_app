@@ -1,0 +1,124 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4"
+  style="background-color: rgba(0,0,0,0.5)">
+  <div class="w-full max-w-2xl bg-white dark:bg-[#0f0f0f] rounded-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-zinc-800 transition-all">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-zinc-800">
+      <h2 class="text-xl font-bold text-slate-800 dark:text-zinc-100">Create Ticket</h2>
+      <button (click)="close.emit()" type="button"
+        class="text-slate-400 hover:text-slate-600 dark:text-zinc-500 dark:hover:text-zinc-300 transition-colors">
+        <span class="material-icons-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" class="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+
+      <!-- Title -->
+      <div class="space-y-1.5">
+        <label class="text-sm font-semibold text-slate-700 dark:text-zinc-300 flex items-center gap-2" for="tc-title">
+          Title
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+        </label>
+        <input id="tc-title" type="text" [(ngModel)]="title" name="title" required
+          class="w-full px-4 py-2.5 bg-white dark:bg-[#1a1a1a] border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 outline-none transition-all"
+          placeholder="Brief summary of the issue" />
+      </div>
+
+      <!-- Description -->
+      <div class="space-y-1.5">
+        <label class="text-sm font-semibold text-slate-700 dark:text-zinc-300 flex items-center gap-2" for="tc-desc">
+          Description
+          <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+        </label>
+        <textarea id="tc-desc" [(ngModel)]="description" name="description" required rows="4"
+          class="w-full px-4 py-2.5 bg-white dark:bg-[#1a1a1a] border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 outline-none transition-all resize-none"
+          placeholder="Describe the issue in detail (Markdown supported)"></textarea>
+      </div>
+
+      <!-- Type & Priority -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="space-y-1.5">
+          <label class="text-sm font-semibold text-slate-700 dark:text-zinc-300" for="tc-type">Type</label>
+          <div class="relative">
+            <select id="tc-type" [(ngModel)]="type" name="type" required
+              class="w-full appearance-none px-4 py-2.5 bg-white dark:bg-[#1a1a1a] border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:text-white outline-none transition-all">
+              @for (t of types; track t) {
+                <option [value]="t">{{ typeLabel(t) }}</option>
+              }
+            </select>
+            <span class="material-icons-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+          </div>
+        </div>
+        <div class="space-y-1.5">
+          <label class="text-sm font-semibold text-slate-700 dark:text-zinc-300 flex items-center gap-2" for="tc-priority">
+            Priority
+            <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
+          </label>
+          <div class="relative">
+            <select id="tc-priority" [(ngModel)]="priority" name="priority" required
+              class="w-full appearance-none px-4 py-2.5 bg-white dark:bg-[#1a1a1a] border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:text-white outline-none transition-all">
+              @for (p of priorities; track p) {
+                <option [value]="p">{{ priorityLabel(p) }}</option>
+              }
+            </select>
+            <span class="material-icons-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+          </div>
+        </div>
+
+        <!-- Assignee & Due Date -->
+        <div class="space-y-1.5">
+          <label class="text-sm font-semibold text-slate-700 dark:text-zinc-300" for="tc-assignee">Assignee</label>
+          <div class="relative">
+            <select id="tc-assignee" [(ngModel)]="assigneeId" name="assignee"
+              class="w-full appearance-none px-4 py-2.5 bg-white dark:bg-[#1a1a1a] border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:text-white outline-none transition-all">
+              <option value="">Unassigned</option>
+              @for (u of users(); track u.id) {
+                <option [value]="u.id">{{ u.firstName }} {{ u.lastName }}</option>
+              }
+            </select>
+            <span class="material-icons-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">person_outline</span>
+          </div>
+        </div>
+        <div class="space-y-1.5">
+          <label class="text-sm font-semibold text-slate-700 dark:text-zinc-300" for="tc-duedate">Due Date</label>
+          <input id="tc-duedate" type="date" [(ngModel)]="dueDate" name="dueDate"
+            class="w-full px-4 py-2.5 bg-white dark:bg-[#1a1a1a] border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:text-white outline-none transition-all [color-scheme:light] dark:[color-scheme:dark]" />
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="space-y-1.5">
+        <label class="text-sm font-semibold text-slate-700 dark:text-zinc-300" for="tc-tags">Tags (comma separated)</label>
+        <input id="tc-tags" type="text" [(ngModel)]="tagsInput" name="tags"
+          class="w-full px-4 py-2.5 bg-white dark:bg-[#1a1a1a] border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:text-white placeholder-slate-400 dark:placeholder-zinc-600 outline-none transition-all"
+          placeholder="e.g. mobile, ios, urgent" />
+      </div>
+
+      <!-- Error -->
+      @if (error()) {
+        <div class="p-3 rounded-lg text-sm flex items-center gap-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800">
+          <span class="material-icons-outlined text-base">error_outline</span>
+          {{ error() }}
+        </div>
+      }
+    </form>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 bg-slate-50 dark:bg-zinc-900/50 flex justify-end gap-3 border-t border-slate-100 dark:border-zinc-800">
+      <button type="button" (click)="close.emit()"
+        class="px-5 py-2 text-sm font-semibold text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 border border-slate-300 dark:border-zinc-700 rounded-lg transition-all">
+        Cancel
+      </button>
+      <button type="button" (click)="onSubmit()" [disabled]="saving()"
+        class="px-6 py-2 text-sm font-semibold text-white bg-pink-500 hover:opacity-90 active:scale-95 rounded-lg shadow-lg shadow-pink-500/20 transition-all disabled:opacity-50">
+        @if (saving()) {
+          <span class="inline-block w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-1.5"></span>
+          Creating...
+        } @else {
+          Create Ticket
+        }
+      </button>
+    </div>
+  </div>
+</div>
