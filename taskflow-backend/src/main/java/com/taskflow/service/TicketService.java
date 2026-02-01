@@ -150,11 +150,15 @@ public class TicketService {
     }
 
     private void checkTicketAccess(Ticket ticket, String userId) {
+        if (userId == null) {
+            throw new UnauthorizedException("User is not authenticated");
+        }
         boolean isReporter = userId.equals(ticket.getReporterId());
         boolean isAssignee = userId.equals(ticket.getAssigneeId());
         if (!isReporter && !isAssignee) {
-            User user = userRepository.findById(userId).orElse(null);
-            if (user == null || !"ADMIN".equals(user.getRole())) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new UnauthorizedException("User not found"));
+            if (!"ADMIN".equals(user.getRole())) {
                 throw new UnauthorizedException("You do not have permission to modify this ticket");
             }
         }

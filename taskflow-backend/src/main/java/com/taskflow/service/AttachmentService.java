@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -23,7 +24,26 @@ public class AttachmentService {
     private final AttachmentRepository attachmentRepository;
     private final Cloudinary cloudinary;
 
+    private static final Set<String> ALLOWED_MIME_TYPES = Set.of(
+            "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml",
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "text/plain", "text/csv",
+            "application/zip", "application/x-rar-compressed",
+            "application/json", "application/xml"
+    );
+
     public Attachment upload(MultipartFile file, String ticketId, String commentId, String userId) {
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_MIME_TYPES.contains(contentType)) {
+            throw new IllegalArgumentException("File type not allowed: " + contentType);
+        }
+
         String url;
         String publicId;
 

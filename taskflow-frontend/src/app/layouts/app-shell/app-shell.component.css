@@ -28,3 +28,9 @@
   max-width: 64rem;
   margin: 0 auto;
 }
+
+@media (max-width: 640px) {
+  .shell-main {
+    padding: 1rem;
+  }
+}

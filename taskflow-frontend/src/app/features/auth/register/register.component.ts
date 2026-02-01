@@ -29,7 +29,10 @@ export class RegisterComponent {
       firstName: this.firstName,
       lastName: this.lastName
     }).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: () => {
+        this.loading.set(false);
+        this.router.navigate(['/']);
+      },
       error: (err) => {
         this.loading.set(false);
         this.error.set(err.error?.message || 'Registration failed');

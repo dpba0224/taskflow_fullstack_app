@@ -228,3 +228,12 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .profile-card {
+    padding: 1rem;
+  }
+}

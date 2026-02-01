@@ -198,3 +198,15 @@
   text-decoration-color: #ec4899;
   color: #ec4899;
 }
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 1.5rem;
+  }
+  .register-header h1 {
+    font-size: 1.5rem;
+  }
+  .name-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,7 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { TicketService } from '../../../core/services/ticket.service';
 import { Ticket, TICKET_STATUSES, TICKET_TYPES, TICKET_PRIORITIES, STATUS_LABELS, TYPE_LABELS, PRIORITY_LABELS, TicketStatus, TicketType, TicketPriority } from '../../../core/models/ticket.model';
 import { TicketCardComponent } from '../../../shared/components/ticket-card/ticket-card.component';
@@ -13,7 +14,7 @@ import { LoaderComponent } from '../../../shared/components/loader/loader.compon
   templateUrl: './ticket-list.component.html',
   styleUrl: './ticket-list.component.css'
 })
-export class TicketListComponent implements OnInit {
+export class TicketListComponent implements OnInit, OnDestroy {
   tickets = signal<Ticket[]>([]);
   loading = signal(true);
   total = signal(0);
@@ -29,13 +30,20 @@ export class TicketListComponent implements OnInit {
   priorityFilter = '';
   searchQuery = '';
 
+  private destroy$ = new Subject<void>();
+
   constructor(private ticketService: TicketService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.searchQuery = params['search'] || '';
       this.loadTickets();
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadTickets() {
@@ -47,7 +55,7 @@ export class TicketListComponent implements OnInit {
       search: this.searchQuery || undefined,
       page: this.page(),
       limit: 20
-    }).subscribe({
+    }).pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.tickets.set(data.tickets);
         this.total.set(data.pagination.total);

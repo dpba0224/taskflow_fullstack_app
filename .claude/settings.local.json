@@ -17,7 +17,9 @@
       "WebFetch(domain:shadcnuikit.com)",
       "WebFetch(domain:ui.shadcn.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(./mvnw compile:*)",
+      "Bash(ls \"/Users/davidpoloabrugena/Desktop/David Polo Abrugena/Ticketing_App/taskflow-backend/\"mvn* \"/Users/davidpoloabrugena/Desktop/David Polo Abrugena/Ticketing_App/taskflow-backend/\"gradle*)"
     ]
   }
 }

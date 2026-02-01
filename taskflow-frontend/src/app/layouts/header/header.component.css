@@ -41,6 +41,21 @@
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
+@media (max-width: 640px) {
+  .search-input {
+    width: 8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    display: none;
+  }
+  .search-icon {
+    display: none;
+  }
+}
+
 .search-input::placeholder {
   color: var(--muted-fg);
 }
@@ -69,4 +84,16 @@
 
 .logout-btn {
   color: var(--muted-fg);
+}
+
+.new-ticket-text,
+.logout-text {
+  display: inline;
+}
+
+@media (max-width: 640px) {
+  .new-ticket-text,
+  .logout-text {
+    display: none;
+  }
 }

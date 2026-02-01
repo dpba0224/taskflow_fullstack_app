@@ -53,8 +53,9 @@ public class TicketController {
         List<String> types = type != null ? Arrays.asList(type.split(",")) : null;
         List<String> priorities = priority != null ? Arrays.asList(priority.split(",")) : null;
 
+        int safeLimit = Math.min(Math.max(limit, 1), 200);
         Page<TicketResponse> ticketPage = ticketService.getTickets(
-                statuses, types, priorities, assignee, reporter, search, sortBy, sortOrder, page, limit);
+                statuses, types, priorities, assignee, reporter, search, sortBy, sortOrder, page, safeLimit);
 
         Map<String, Object> data = Map.of(
                 "tickets", ticketPage.getContent(),

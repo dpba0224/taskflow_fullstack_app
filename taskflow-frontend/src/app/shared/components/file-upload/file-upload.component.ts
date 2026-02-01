@@ -83,8 +83,9 @@ export class FileUploadComponent {
   }
 
   removeFile(id: string) {
-    this.http.delete(`${this.api}/${id}`).subscribe(() => {
-      this.files.update(f => f.filter(x => x.id !== id));
+    this.http.delete(`${this.api}/${id}`).subscribe({
+      next: () => this.files.update(f => f.filter(x => x.id !== id)),
+      error: () => this.error.set('Failed to delete file')
     });
   }
 

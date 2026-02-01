@@ -61,7 +61,7 @@ export class ProfileComponent {
           },
           error: () => {
             this.uploadingAvatar.set(false);
-            this.success.set('Profile picture updated successfully');
+            this.success.set('Profile picture updated, but failed to refresh profile');
           }
         });
       },

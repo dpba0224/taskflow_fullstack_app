@@ -146,3 +146,10 @@
   min-width: 6rem;
   text-align: center;
 }
+
+@media (max-width: 480px) {
+  .filter-select {
+    flex: 1;
+    min-width: 0;
+  }
+}

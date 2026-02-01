@@ -22,7 +22,8 @@ public class ReportController {
             @RequestParam(required = false) String date,
             @RequestParam(required = false) String userId) {
         LocalDate reportDate = date != null ? LocalDate.parse(date) : LocalDate.now();
-        String uid = userId != null ? userId : UserPrincipal.getCurrentUserId();
+        // Always use the authenticated user's ID to prevent viewing other users' data
+        String uid = UserPrincipal.getCurrentUserId();
         Map<String, Object> report = reportService.generateStandupReport(uid, reportDate);
         return ResponseEntity.ok(ApiResponse.ok(report));
     }

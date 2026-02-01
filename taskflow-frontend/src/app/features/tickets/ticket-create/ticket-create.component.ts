@@ -1,7 +1,8 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { TicketService } from '../../../core/services/ticket.service';
 import { UserService } from '../../../core/services/user.service';
 import { TICKET_TYPES, TICKET_PRIORITIES, TYPE_LABELS, PRIORITY_LABELS, TicketType, TicketPriority } from '../../../core/models/ticket.model';
@@ -13,7 +14,7 @@ import { User } from '../../../core/models/user.model';
   templateUrl: './ticket-create.component.html',
   styleUrl: './ticket-create.component.css'
 })
-export class TicketCreateComponent {
+export class TicketCreateComponent implements OnInit, OnDestroy {
   close = output();
 
   types = TICKET_TYPES;
@@ -31,12 +32,21 @@ export class TicketCreateComponent {
   saving = signal(false);
   error = signal('');
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private ticketService: TicketService,
     private userService: UserService,
     private router: Router
-  ) {
-    this.userService.getAllUsers().subscribe(users => this.users.set(users));
+  ) {}
+
+  ngOnInit() {
+    this.userService.getAllUsers().pipe(takeUntil(this.destroy$)).subscribe(users => this.users.set(users));
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   typeLabel(t: TicketType) { return TYPE_LABELS[t]; }
@@ -56,7 +66,7 @@ export class TicketCreateComponent {
       assigneeId: this.assigneeId || undefined,
       dueDate: this.dueDate ? new Date(this.dueDate).toISOString() : undefined,
       tags
-    }).subscribe({
+    }).pipe(takeUntil(this.destroy$)).subscribe({
       next: (ticket) => {
         this.close.emit();
         this.router.navigate(['/tickets', ticket.id]);

@@ -135,3 +135,14 @@
   justify-content: flex-end;
   margin-top: 0.5rem;
 }
+
+@media (max-width: 480px) {
+  .comment-body,
+  .edit-area {
+    margin-left: 0;
+  }
+  .comment-header {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+}

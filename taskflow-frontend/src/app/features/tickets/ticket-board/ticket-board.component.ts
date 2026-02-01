@@ -1,6 +1,7 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { TicketService } from '../../../core/services/ticket.service';
 import { Ticket, TicketStatus, TICKET_STATUSES, STATUS_LABELS, PRIORITY_COLORS, PRIORITY_LABELS, TYPE_LABELS } from '../../../core/models/ticket.model';
 import { LoaderComponent } from '../../../shared/components/loader/loader.component';
@@ -19,13 +20,14 @@ const STATUS_COLORS: Record<string, string> = {
   templateUrl: './ticket-board.component.html',
   styleUrl: './ticket-board.component.css'
 })
-export class TicketBoardComponent implements OnInit {
+export class TicketBoardComponent implements OnInit, OnDestroy {
   tickets = signal<Ticket[]>([]);
   loading = signal(true);
   columns: TicketStatus[] = TICKET_STATUSES;
   dragOverStatus: TicketStatus | null = null;
 
   private draggedTicket: Ticket | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(private ticketService: TicketService) {}
 
@@ -33,9 +35,14 @@ export class TicketBoardComponent implements OnInit {
     this.loadTickets();
   }
 
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   loadTickets() {
     this.loading.set(true);
-    this.ticketService.getTickets({ limit: 200 }).subscribe({
+    this.ticketService.getTickets({ limit: 200 }).pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.tickets.set(data.tickets);
         this.loading.set(false);
@@ -70,8 +77,9 @@ export class TicketBoardComponent implements OnInit {
     event.preventDefault();
     this.dragOverStatus = null;
     if (this.draggedTicket && this.draggedTicket.status !== status) {
-      this.ticketService.updateTicket(this.draggedTicket.id, { status }).subscribe(() => {
-        this.loadTickets();
+      this.ticketService.updateTicket(this.draggedTicket.id, { status }).pipe(takeUntil(this.destroy$)).subscribe({
+        next: () => this.loadTickets(),
+        error: () => {}
       });
     }
     this.draggedTicket = null;

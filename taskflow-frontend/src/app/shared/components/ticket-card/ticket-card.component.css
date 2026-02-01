@@ -154,3 +154,13 @@
   font-size: 0.75rem;
   color: var(--muted-fg);
 }
+
+@media (max-width: 480px) {
+  .ticket-card {
+    padding: 1rem;
+  }
+  .card-footer {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
