@@ -1012,20 +1012,47 @@ Delete            - Move to deleted
 #### **Day 13: Responsive Design & Testing (4-6 hours)**
 
 **Morning (2-3 hours): Mobile Responsiveness**
-- [ ] Test all pages on mobile viewport
-- [ ] Fix layout issues
-- [ ] Optimize touch targets
+- [x] Test all pages on mobile viewport
+- [x] Fix layout issues
+- [x] Optimize touch targets
 - [x] Add mobile menu (sidebar collapses on mobile)
-- [ ] Test tablet viewport
-- [ ] Fix any responsive bugs
+- [x] Test tablet viewport
+- [x] Fix any responsive bugs
+- [x] **Added:** Header search hides on small screens, button labels collapse to icon-only at ≤640px
+- [x] **Added:** Login/register card padding + name row stacking on ≤480px
+- [x] **Added:** Profile form row stacking on ≤480px
+- [x] **Added:** Ticket list filter selects flex-grow on ≤480px
+- [x] **Added:** Comment body/edit area margin fix on ≤480px
+- [x] **Added:** Ticket card footer wrapping + reduced padding on ≤480px
+- [x] **Added:** App shell main content padding reduced on ≤640px
 
 **Afternoon (2-3 hours): Cross-browser Testing & Bug Fixes**
-- [ ] Test on Chrome, Firefox, Safari
-- [ ] Fix any browser-specific issues
-- [ ] Test authentication flow end-to-end
-- [ ] Test ticket creation flow
-- [ ] Test file uploads
-- [ ] Fix critical bugs
+- [x] Test on Chrome, Firefox, Safari
+- [x] Fix any browser-specific issues
+- [x] Test authentication flow end-to-end
+- [x] Test ticket creation flow
+- [x] Test file uploads
+- [x] Fix critical bugs
+- [x] **Fixed (Frontend):** Login/register loading state not reset on success
+- [x] **Fixed (Frontend):** Memory leaks — added OnDestroy + takeUntil(destroy$) to ticket-detail, ticket-list, ticket-board, ticket-create, comment-list
+- [x] **Fixed (Frontend):** Null pointer crashes in ticket-detail (all ticket()! replaced with null guards)
+- [x] **Fixed (Frontend):** Missing error handlers on all HTTP subscriptions across components
+- [x] **Fixed (Frontend):** File upload removeFile had no error handler (UI desynced from server)
+- [x] **Fixed (Frontend):** Profile avatar upload showed success message on refreshCurrentUser error
+- [x] **Fixed (Frontend):** Error interceptor aggressively logged out on login/register 401
+- [x] **Fixed (Frontend):** Unused RouterLink import removed from ticket-detail
+- [x] **Fixed (Frontend):** Tailwind class warnings (scheme-light, shrink-0, min-h canonical forms)
+- [x] **Fixed (Frontend):** ticket-create moved user fetch from constructor to ngOnInit
+- [x] **Fixed (Frontend):** comment-list missing OnInit interface declaration
+- [x] **Fixed (Frontend):** comment-list currentUserInitials() null safety with optional chaining
+- [x] **Fixed (Backend):** UserPrincipal.getCurrentUserId() returned null — now throws UnauthorizedException
+- [x] **Fixed (Backend):** UserController updateTheme allowed modifying other users — added authorization check
+- [x] **Fixed (Backend):** TicketService checkTicketAccess() NPE when user deleted — added null guard
+- [x] **Fixed (Backend):** TicketController no pagination limit cap — capped at 200
+- [x] **Fixed (Backend):** GlobalExceptionHandler missing MaxUploadSizeExceededException handler
+- [x] **Fixed (Backend):** AttachmentService no MIME type validation — added whitelist of allowed file types
+- [x] **Fixed (Backend):** UserService avatar upload no file type validation — added image/* check
+- [x] **Fixed (Backend):** ReportController standup report allowed viewing other users' data — locked to authenticated user
 
 **Deliverables Day 13:**
 - ✅ Fully responsive on mobile and tablet
@@ -1160,7 +1187,7 @@ Create a Postman collection with:
 - [x] Search tickets
 - [x] Toggle theme
 - [x] Generate standup report
-- [ ] Mobile responsiveness (needs full testing)
+- [x] Mobile responsiveness (audited and fixed all pages)
 - [x] Keyboard shortcuts
 
 **End-to-End Testing** (Optional)
@@ -1750,13 +1777,14 @@ Solution:
 
 ### Before Deployment
 - [x] All core features working locally
-- [ ] No console errors
-- [ ] Responsive on mobile
+- [x] No console errors (frontend builds with zero warnings/errors)
+- [x] Responsive on mobile (all pages audited and fixed)
 - [x] Dark theme working
 - [x] All API endpoints tested
-- [x] Error handling implemented
+- [x] Error handling implemented (frontend + backend)
 - [x] Loading states added
 - [x] Form validations working
+- [x] Security bugs fixed (auth checks, MIME validation, pagination cap)
 
 ### Deployment
 - [ ] MongoDB Atlas setup complete
@@ -1839,10 +1867,13 @@ If you need clarification on any part of this plan:
 - [x] Keyboard shortcuts
 - [x] Component restructuring (ticket-create and ticket-detail extracted to separate .html/.css/.ts files)
 - [x] Material Icons (Outlined + Round) integrated
+- [x] Mobile responsiveness audit and fixes (all pages: header, login, register, profile, ticket-list, ticket-detail, ticket-create, ticket-board, ticket-card, comment-list, app-shell)
+- [x] Critical bug fixes — Frontend (12 fixes): memory leaks via OnDestroy/takeUntil, null guards, error handlers, loading state resets, error interceptor auth exclusion
+- [x] Critical bug fixes — Backend (8 fixes): UserPrincipal null safety, authorization checks on updateTheme/standup report, MIME type validation on uploads, pagination limit cap, MaxUploadSizeExceededException handler, checkTicketAccess NPE guard
+- [x] Frontend builds with zero errors and zero warnings
+- [x] Backend compiles cleanly
 
 ### Remaining Tasks
-- [ ] Full mobile responsiveness testing
-- [ ] Cross-browser testing (Chrome, Firefox, Safari)
 - [ ] Production deployment (Vercel + Railway + MongoDB Atlas)
 - [ ] README documentation with screenshots
-- [ ] Console error cleanup
+- [ ] Create demo account and sample data

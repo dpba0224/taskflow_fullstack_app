@@ -7,11 +7,13 @@ import { User } from '../models/user.model';
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly api = environment.apiUrl;
-  readonly isDark = signal(false);
+  readonly isDark = signal(true);
 
   constructor(private http: HttpClient) {
     const stored = localStorage.getItem('theme');
-    if (stored === 'dark') {
+    if (stored === 'light') {
+      this.setDark(false);
+    } else {
       this.setDark(true);
     }
   }
